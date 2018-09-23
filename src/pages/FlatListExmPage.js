@@ -2,38 +2,49 @@ import React, { Component } from 'react';
 import { View, Text ,StyleSheet,FlatList} from 'react-native';
 import { DummyData } from '../components/flatListExmPage/DummyData';
 import {Button} from "react-native-paper";
-data=[
-    {
-        firstName:"Ayşe",
-        lastName:"Kaya",
-        phone:"05556376378"
+// data=[
+//     {
+//         firstName:"Ayşe",
+//         lastName:"Kaya",
+//         phone:"05556376378"
 
 
-    },
-    {
-    firstName:"Gaye",
-    lastName:"Akbaba",
-    phone:"05559206378"
+//     },
+//     {
+//     firstName:"Gaye",
+//     lastName:"Akbaba",
+//     phone:"05559206378"
 
 
-},
-{
-    firstName:"Mehmet",
-    lastName:"Açar",
-    phone:"05413568790"
-},
-{
-    firstName:"Saygı",
-    lastName:"Değer",
-    phone:"05356784352"
-}
+// },
+// {
+//     firstName:"Mehmet",
+//     lastName:"Açar",
+//     phone:"05413568790"
+// },
+// {
+//     firstName:"Saygı",
+//     lastName:"Değer",
+//     phone:"05356784352"
+// }
     
-];
+// ];
 
 
 class FlatListExmPage extends Component{
 state={
-    isShowListVisible:false
+    isShowListVisible:false,
+    data:[]
+};
+componentDidMount(){
+    this.fetchData();
+}
+
+fetchData=async ()=>{
+    const response= await fetch("http://www.json-generator.com/api/json/get/bUnhveDRVe?indent=2");
+    const json= await response.json();
+    this.setState({data:json.people});
+    
 };
 
     renderFlatList(){
@@ -42,15 +53,15 @@ state={
                 <View style={styles.list} >
 
                 <FlatList   
-                data={data}
+                data={this.state.data}
                 keyExtractor={(item,index)=>index.toString()}
                 renderItem={({item,index})=>{
                     return (
                         <View key={index} style={styles.container} >
                 
-                        <Text   >{item.firstName}</Text>
-                        <Text    >{item.lastName}</Text>
-                        <Text   >{item.phone}</Text>
+                        <Text   >{item.people.phone}</Text>
+                        <Text    >{item.people.age}</Text>
+                        <Text   >{item.people.name}</Text>
                         </View>
                 
                 
