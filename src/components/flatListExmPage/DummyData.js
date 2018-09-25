@@ -1,30 +1,28 @@
-const DummyData=({ data }) =>{
-   data=[
-        {
-            firstName:"Ayşe",
-            lastName:"Kaya",
-            phone:"05556376378"
+export const DummyData = [
 
-
-        },
-        {
-        firstName:"Gaye",
-        lastName:"Akbaba",
-        phone:"05559206378"
+    {
+        firstName: "erkan",
+        lastName: "Kaya",
+        phone: "05556376378"
 
 
     },
     {
-        firstName:"Mehmet",
-        lastName:"Açar",
-        phone:"05413568790"
+        firstName: "Gaye",
+        lastName: "Akbaba",
+        phone: "05559206378"
+
+
     },
     {
-        firstName:"Saygı",
-        lastName:"Değer",
-        phone:"05356784352"
+        firstName: "Mehmet",
+        lastName: "Açar",
+        phone: "05413568790"
+    },
+    {
+        firstName: "Saygı",
+        lastName: "Değer",
+        phone: "05356784352"
     }
-        
-    ]
-};
-export {DummyData};
+
+]

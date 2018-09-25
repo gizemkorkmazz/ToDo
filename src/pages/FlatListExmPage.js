@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text ,StyleSheet,FlatList} from 'react-native';
-import { DummyData } from '../components/flatListExmPage/DummyData';
 import {Button} from "react-native-paper";
-data=[
+import { DummyData } from '../components/flatListExmPage/DummyData';
+
+ data=[
     {
         firstName:"Ayşe",
         lastName:"Kaya",
@@ -29,7 +30,7 @@ data=[
 class FlatListExmPage extends Component{
 state={
     isShowListVisible:false,
-    data:[]
+    data:data
 };
 // componentDidMount(){
 //     this.fetchData();
@@ -49,7 +50,7 @@ state={
 
                 <FlatList   
                 // data={this.state.data}
-                data={data}
+                data={this.state.data}
                 keyExtractor={(item,index)=>index.toString()}
                 renderItem={({item,index})=>{
                     return (
@@ -69,13 +70,13 @@ state={
                 
                     )
                 }}
-                
+    
                 
                 >
                 
                 </FlatList>
-                <Button raised onPress={()=>{}  }>Sil</Button>
-            <Button raised onPress={()=>{}  }>Ekle</Button>
+                <Button raised onPress={()=>this.deleteItem() }>Sil</Button>
+            <Button raised onPress={()=>this.addNewItem()}>Ekle</Button>
 
 
                 </View>
@@ -84,6 +85,18 @@ state={
         return <View></View>
  
     
+    };
+addNewItem(){
+    var newItem={
+        firstName:"Görgü",
+        lastName:"Nadir",
+        phone:"05413568790"
+    }
+     this.setState({ data: this.state.data.push(newItem) }) ;
+};
+
+    deleteItem(){
+        this.setState({ data: this.state.data.splice() }) ;
     };
     render(){
         return(
