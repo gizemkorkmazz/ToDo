@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Button } from 'react-native-paper';
 import { DummyData } from '../components/flatListExmPage/DummyData';
-
+// *TODO :
+// Ekleye basınca 3 adet textinput çıkacak.Hepsi dolu ise diziye ekleyecek.Sonrada dizinin içindekine dokununca sil butonu çıkacak ve istenilen item silinebilecek.
 data = [
 	{
 		firstName: 'Ayşe',
