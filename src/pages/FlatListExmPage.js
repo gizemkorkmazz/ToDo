@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Button } from 'react-native-paper';
+import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity, Dimensions,ScrollView } from 'react-native';
+import { Button, Dialog, TextInput, TouchableRipple } from 'react-native-paper';
 import { DummyData } from '../components/flatListExmPage/DummyData';
+import _ from 'lodash';
+
 // *TODO :
 // Ekleye basınca 3 adet textinput çıkacak.Hepsi dolu ise diziye ekleyecek.Sonrada dizinin içindekine dokununca sil butonu çıkacak ve istenilen item silinebilecek.
 data = [
@@ -21,12 +23,16 @@ data = [
 		phone: '05413568790'
 	}
 ];
+const {width}=Dimensions.get("window")
 
 class FlatListExmPage extends Component {
 	state = {
 		isShowListVisible: false,
-		data: data
+		data: data,
+		modalVisible:false,
+		selectedItem:null
 	};
+
 	// componentDidMount(){
 	//     this.fetchData();
 	// }
@@ -37,31 +43,35 @@ class FlatListExmPage extends Component {
 	//     this.setState({data:json.indent});
 
 	// };
-
+componentDidMount(){
+	// data.forEach(()=>{
+	// 	this.setState({index:this.state.index +1})
+	// })
+}
 	renderFlatList() {
 		if (this.state.isShowListVisible === true) {
 			return (
-				<View style={styles.list}>
+				<View >
 					<FlatList
-						// data={this.state.data}
 						data={this.state.data}
 						keyExtractor={(item, index) => index.toString()}
 						renderItem={({ item, index }) => {
 							return (
-								<View key={index}>
+								<TouchableOpacity onPress={()=>{this.refs.myScroll.scrollTo({x:width,y:0,animated:true}),this.setState({selectedItem:data[1]})}}  key={index}>
 									{/*                 
                         <Text   >{item.people.phone}</Text>
                         <Text    >{item.people.age}</Text>
-                        <Text   >{item.people.name}</Text> */}
-									<Text>{item.firstName}</Text>
+						<Text   >{item.people.name}</Text> */}
+
+									<Text style={{marginTop:10}} >{item.firstName}</Text>
 									<Text>{item.lastName}</Text>
 									<Text>{item.phone}</Text>
-								</View>
+								</TouchableOpacity>
 							);
 						}}
 					/>
-					<Button raised onPress={() => this.deleteItem()}>
-						Sil
+					<Button raised onPress={() => this.deleteFullList()}>
+						Tümünü Sil
 					</Button>
 					<Button raised onPress={() => this.addNewItem()}>
 						Ekle
@@ -72,24 +82,72 @@ class FlatListExmPage extends Component {
 		return <View />;
 	}
 	addNewItem() {
+
 		var newItem = {
-			firstName: 'Görgü',
-			lastName: 'Nadir',
-			phone: '05413568790'
+			firstName: this.firstName,
+			lastName: this.lastName,
+			phone: this.phone
         };
         let a = this.state.data;
         // a.push(newItem);
         a = [...a, newItem]; // 3 nokta , a nın hepsini al demek.a=[...a,newItem] da a nın hepsini al, sonuna da newItem ı ekle bu da a adında yeni bir dizi olsun demek.
-		this.setState({ data: a });
+		this.setState({ data: a,modalVisible:true });
 	}
 
-	deleteItem() {
+	deleteFullList() {
 		this.setState({ data: this.state.data.splice() });
 	}
+	itemDetail(){
+
+		return(
+			<View>
+<Text>{data[1].firstName}</Text>
+<Text>{data[1].lastName}</Text>
+<Text>{data[1].phone}</Text>
+
+			<Button raised onPress={() =>{this.editItem(),this.setState({modalVisible:true})}}>
+						Düzenle
+					</Button>
+					<Button raised onPress={() => this.deleteItem()}>
+						Listeden Sil
+					</Button>
+					<Button raised onPress={() => {this.refs.myScroll.scrollTo({x:0,y:0,animated:true})}}>
+						Geri Dön
+					</Button>
+				
+		</View>
+		);
+	
+	}
+	deleteItem(){
+		// let a= delete this.state.data[1]
+		// this.setState({data: a})
+		this.setState({ data: this.state.data.splice(1,1) });
+	}
+	editItem(){
+		return(
+
+		<Dialog  
+		visible={this.state.modalVisible}
+		onDismiss={() => this.setState({ modalVisible: false })}
+		>  
+<TextInput placeholder={data[1].firstName}value={this.firstName}onChangeText={text => (this.firstName = text)} ></TextInput>
+<TextInput placeholder={data[1].lastName}value={this.lastName}onChangeText={text => (this.lastName = text)} ></TextInput>
+<TextInput placeholder={data[1].phone} value={this.phone} onChangeText={text => (this.phone = text)} ></TextInput>
+<Button raised onPress={() => { this.setState({modalVisible:false,data:this.state.data.splice(1,1,{firstName:this.firstName,lastName:this.lastName,phone:this.phone})})}}>Düzenle</Button>
+		</Dialog>
+		)
+
+	}
 	render() {
-        console.log(this.state);
+		this.firstName="",
+		this.lastName="",
+		this.phone=""
+		console.log(data)
 		return (
-			<View style={styles.container}>
+			<ScrollView style={styles.container} horizontal={true} ref="myScroll"scrollEnabled={false} >
+			<View style={{width:width}} >  
+
 				<Button
 					raised
 					onPress={() => {
@@ -99,7 +157,37 @@ class FlatListExmPage extends Component {
 					Listele
 				</Button>
 				{this.renderFlatList()}
+				<Dialog  
+			visible={this.state.modalVisible}
+			onDismiss={() => this.setState({ modalVisible: false })}
+			>  
+<TextInput placeholder="İsim" value={this.firstName}onChangeText={text => (this.firstName = text)} ></TextInput>
+<TextInput placeholder="Soyisim" value={this.lastName}onChangeText={text => (this.lastName = text)} ></TextInput>
+<TextInput placeholder="No" value={this.phone} onChangeText={text => (this.phone = text)} ></TextInput>
+<Button raised onPress={() => 
+	{
+		if(!this.firstName|| !this.lastName||!this.phone){
+return(
+	<Text style={{color:"pink",fontSize:20}} >Lütfen tüm alanları doldurunuz</Text>
+);
+			// Alert.alert(null, 'Lütfen tüm alanları doldurunuz!', [{ text: 'Tamam' }]);
+			// return;
+		}
+		this.addNewItem(), this.setState({modalVisible:false})
+	}}>
+	
+
+
+						Yeni Üye Ekle
+					</Button>
+			</Dialog>
 			</View>
+			<View  style={{width:width}}>
+				{this.itemDetail()}
+				{this.editItem()}
+			</View>
+			</ScrollView>
+		
 		);
 	}
 }
@@ -107,7 +195,6 @@ const styles = StyleSheet.create({
 	container: {
 		marginTop: 20
 	},
-	list: {}
 });
 export { FlatListExmPage };
 
