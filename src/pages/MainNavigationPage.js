@@ -1,20 +1,24 @@
 import React,{Component} from "react";
 import { createStackNavigator } from 'react-navigation';
 import { FlatListExmPage } from "./FlatListExmPage";
+import { FlatListWithJson } from "./FlatListWithJson";
 const Roots=createStackNavigator(
     {
         flatList:{
             screen: FlatListExmPage,
 
         },
+        flatListWJ:{
+            screen:FlatListWithJson,
+        }
 
 
         
     },
-    // {
-    //     initialRouteName: 'flatList',
+    {
+        initialRouteName: 'flatListWJ',
 
-    // }
+    }
 )
 class MainNavigationPage extends Component{
 

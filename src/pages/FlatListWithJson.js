@@ -1,42 +1,33 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { Button, Dialog, TextInput, TouchableRipple } from 'react-native-paper';
-import { DummyData } from '../components/flatListExmPage/DummyData';
 import _ from 'lodash';
 
 // *TODO :
 // Ekleye basınca 3 adet textinput çıkacak.Hepsi dolu ise diziye ekleyecek.Sonrada dizinin içindekine dokununca sil butonu çıkacak ve istenilen item silinebilecek.
-data = [
-	{
-		firstName: 'Ayşe',
-		lastName: 'Kaya',
-		phone: '05556376378'
-	},
-	{
-		firstName: 'Gaye',
-		lastName: 'Akbaba',
-		phone: '05559206378'
-	},
-	{
-		firstName: 'Mehmet',
-		lastName: 'Açar',
-		phone: '05413568790'
-	}
-];
+
 const { width } = Dimensions.get('window');
 
-class FlatListExmPage extends Component {
+class FlatListWithJson extends Component {
 	state = {
 		isShowListVisible: false,
-		data: data,
+		data: [],
 		modalVisible: false,
 		selectedItem: null
 	};
 
+	componentDidMount(){
+	    this.fetchData();
+	}
+
+	fetchData=async ()=>{
+	    const response= await fetch("http://www.json-generator.com/api/json/get/cfucMzOqtK?indent=2");
+	    const json= await response.json();
+	    this.setState({data:json.people});
+
+	};
 
 	renderFlatList() {
-		console.log(this.state.selectedItem)
-
 		if (this.state.isShowListVisible === true) {
 			return (
 				<View>
@@ -48,28 +39,19 @@ class FlatListExmPage extends Component {
 							return (
 								<TouchableOpacity
 									onPress={() => {
-										let index= this.state.selectedItem.findIndex()
-
-										this.setState({ selectedItem: item,data:this.state.data.slice(index)}),
+this.setState({selectedItem:item})
+										
 									 	this.refs.myScroll.scrollTo({ x: width, y: 0, animated: true })
-										// if(!this.state.selectedItem){
-										// 	return (this.setState({ selectedItem: item }))
-
-										// }
-										// return (
-										// 	this.setState({ selectedItem: this.state.selectedItem }),
-										// 	this.refs.myScroll.scrollTo({ x: width, y: 0, animated: true })
-								
-										// )	
+										
 										
 									}}
 									key={index}
 								>
-					
+									                
+                        <Text  style={{ marginTop: 10 }} >{item.phone}</Text>
+                        <Text    >{item.age}</Text>
+						<Text   >{item.name}</Text>
 
-									<Text style={{ marginTop: 10 }}>{item.firstName}</Text>
-									<Text>{item.lastName}</Text>
-									<Text>{item.phone}</Text>
 								</TouchableOpacity>
 							);
 						}}
@@ -87,9 +69,9 @@ class FlatListExmPage extends Component {
 	}
 	addNewItem() {
 		var newItem = {
-			firstName: this.firstName,
-			lastName: this.lastName,
-			phone: this.phone
+			phone: this.phone,
+			age: this.age,
+			name: this.name
 		};
 		let a = this.state.data;
 		// a.push(newItem);
@@ -110,19 +92,21 @@ class FlatListExmPage extends Component {
 		this.setState({ data: this.state.data.splice() });
 	}
 	itemDetail() {
+console.log(this.state.selectedItem)
+
 		if (!this.state.selectedItem) {
 			return <View />;
 		}
 		return (
 			<View>
-				<Text>{this.state.selectedItem.firstName}</Text>
-				<Text>{this.state.selectedItem.lastName}</Text>
 				<Text>{this.state.selectedItem.phone}</Text>
+				<Text>{this.state.selectedItem.age}</Text>
+				<Text>{this.state.selectedItem.name}</Text>
 
 				<Button
 					raised
 					onPress={() => {
-						this.editItem(), this.setState({ modalVisible: true });
+                        this.setState({ modalVisible: true });
 					}}
 				>
 					Düzenle
@@ -142,47 +126,9 @@ class FlatListExmPage extends Component {
 		);
 	}
 
-	editItem() {
-		if (!this.state.selectedItem) {
-			return <View />;
-		}
-		return (
-			<Dialog visible={this.state.modalVisible} onDismiss={() => this.setState({ modalVisible: false })}>
-				<TextInput
-					placeholder={this.state.selectedItem.firstName}
-					value={this.firstName}
-					onChangeText={(text) => (this.firstName = text)}
-				/>
-				<TextInput
-					placeholder={this.state.selectedItem.lastName}
-					value={this.lastName}
-					onChangeText={(text) => (this.lastName = text)}
-				/>
-				<TextInput
-					placeholder={this.state.selectedItem.phone}
-					value={this.phone}
-					onChangeText={(text) => (this.phone = text)}
-				/>
-				<Button
-					raised
-					onPress={() => {
-						this.setState({
-							modalVisible: false,
-							data: this.state.data.splice(1, 1, {
-								firstName: this.firstName,
-								lastName: this.lastName,
-								phone: this.phone
-							})
-						});
-					}}
-				>
-					Düzenle
-				</Button>
-			</Dialog>
-		);
-	}
+
 	render() {
-		(this.firstName = ''), (this.lastName = ''), (this.phone = '');
+		(this.phone = ''), (this.age = ''), (this.name = '');
 		return (
 			<ScrollView style={styles.container} horizontal={true} ref="myScroll" scrollEnabled={false}>
 				<View style={{ width: width }}>
@@ -197,26 +143,22 @@ class FlatListExmPage extends Component {
 					{this.renderFlatList()}
 					<Dialog visible={this.state.modalVisible} onDismiss={() => this.setState({ modalVisible: false })}>
 						<TextInput
-							placeholder="İsim"
-							value={this.firstName}
-							onChangeText={(text) => (this.firstName = text)}
+							placeholder="Telefon"
+							value={this.phone}
+							onChangeText={(text) => (this.phone = text)}
 						/>
 						<TextInput
-							placeholder="Soyisim"
-							value={this.lastName}
-							onChangeText={(text) => (this.lastName = text)}
+							placeholder="Yaş"
+							value={this.age}
+							onChangeText={(text) => (this.age = text)}
 						/>
-						<TextInput placeholder="No" value={this.phone} onChangeText={(text) => (this.phone = text)} />
+						<TextInput placeholder="İsim" value={this.name} onChangeText={(text) => (this.name = text)} />
 						<Button
 							raised
 							onPress={() => {
-								console.log(this.firstName, this.lastName, this.phone);
-								if (!this.firstName || !this.lastName || !this.phone) {
-									// return (
-									// 	<Text style={{ color: 'pink', fontSize: 20 }}>
-									// 		Lütfen tüm alanları doldurunuz
-									// 	</Text>
-									// );
+								console.log(this.phone, this.age, this.name);
+								if (!this.phone || !this.age || !this.name) {
+								
 									Alert.alert(null, 'Lütfen tüm alanları doldurunuz!', [ { text: 'Tamam' } ]);
 									return;
 								}
@@ -228,8 +170,40 @@ class FlatListExmPage extends Component {
 					</Dialog>
 				</View>
 				<View style={{ width: width }}>
-					{this.itemDetail()}
-					{this.editItem()}
+                    {this.itemDetail()}
+                    <Dialog visible={this.state.modalVisible} onDismiss={() => this.setState({ modalVisible: false })}>
+				{/* <TextInput
+					placeholder={this.state.selectedItem.phone}
+					value={this.phone}
+					onChangeText={(text) => (this.phone = text)}
+				/>
+				<TextInput
+					placeholder={this.state.selectedItem.age}
+					value={this.age}
+					onChangeText={(text) => (this.age = text)}
+				/>
+				<TextInput
+					placeholder={this.state.selectedItem.name}
+					value={this.name}
+					onChangeText={(text) => (this.name = text)}
+				/> */}
+				<Button
+					raised
+					onPress={() => {
+						this.setState({
+							modalVisible: false,
+							data: this.state.data.splice(1, 1, {
+								phone: this.phone,
+								age: this.age,
+								name: this.name
+							})
+						});
+					}}
+				>
+					Düzenle
+				</Button>
+			</Dialog>
+					{/* {this.editItem()} */}
 				</View>
 			</ScrollView>
 		);
@@ -240,7 +214,7 @@ const styles = StyleSheet.create({
 		marginTop: 20
 	}
 });
-export { FlatListExmPage };
+export { FlatListWithJson };
 
 // array.shift() // Dizinin ilk elemanını çıkartır.
 // array.unshift(0) // Diziye bir eleman ekler. (En başa)
