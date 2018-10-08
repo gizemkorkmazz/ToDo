@@ -77,17 +77,30 @@ this.setState({selectedItem:item})
 		// a.push(newItem);
 		a = [ ...a, newItem ]; // 3 nokta , a nın hepsini al demek.a=[...a,newItem] da a nın hepsini al, sonuna da newItem ı ekle bu da a adında yeni bir dizi olsun demek.
 		this.setState({ data: a, modalVisible: true });
-	}
+    }
+    
 	deleteItem() {
-		this.setState({ selectedItem: this.state.data.slice() });
+        console.log(this.state.selectedItem);
+        //burada selected itemın indexini bulıp datadan silceksin.
+    //    let index = this.state.data.indexOf(this.state.selectedItem);
+    //    this.state.data.slice(index, 1);
+    //    var data = [...this.state.data]
+    //    this.setState({ data:data });
+   
+
+
+       
+
+
+		// this.setState({ selectedItem: this.state.data.slice() });
 	// 	let newData=data.map(selectedItem=>(
 	// 		!this.state.selectedItem? {...selectedItem, key: value}: selectedItem
 	//   ))
 	
 
-
+    }
 		
-	}
+
 	deleteFullList() {
 		this.setState({ data: this.state.data.splice() });
 	}
@@ -172,12 +185,12 @@ console.log(this.state.selectedItem)
 				<View style={{ width: width }}>
                     {this.itemDetail()}
                     <Dialog visible={this.state.modalVisible} onDismiss={() => this.setState({ modalVisible: false })}>
-				{/* <TextInput
-					placeholder={this.state.selectedItem.phone}
+				<TextInput
+					placeholder="jfbkm"
 					value={this.phone}
 					onChangeText={(text) => (this.phone = text)}
 				/>
-				<TextInput
+				{/* <TextInput
 					placeholder={this.state.selectedItem.age}
 					value={this.age}
 					onChangeText={(text) => (this.age = text)}
@@ -203,7 +216,6 @@ console.log(this.state.selectedItem)
 					Düzenle
 				</Button>
 			</Dialog>
-					{/* {this.editItem()} */}
 				</View>
 			</ScrollView>
 		);
