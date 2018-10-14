@@ -14,26 +14,57 @@ class FlatListWithJson extends Component {
 		data: [],
 		modalVisible: false,
 		selectedItem: null,
-	};
+		searchResult:null,
+		moreData:[]
 
+	};
+//"http://www.json-generator.com/api/json/get/cfucMzOqtK?indent=2"
 	componentDidMount(){
 	    this.fetchData();
 	}
 
 	fetchData=async ()=>{
-	    const response= await fetch("http://www.json-generator.com/api/json/get/cfucMzOqtK?indent=2");
+	    const response= await fetch("http://www.json-generator.com/api/json/get/cfkYYuqXZu?indent=2");
 	    const json= await response.json();
-	    this.setState({data:json.people});
+		// this.setState({data:json.people});
+	    this.setState({data:json.extraPeople});
+		
 
 	};
-
+	dataControl(){
+		if(!this.state.searchResult){
+			return data=this.state.data
+		}
+		return data=this.state.searchResult
+		}
 	renderFlatList() {
+
 		if (this.state.isShowListVisible === true) {
 			return (
 				<View>
+<TextInput
+						placeholder="ARA"
+						underlineColorAndroid="transparent"
+						clearButtonMode="always"
+						onChangeText={text => {
+						
+							console.log(this.state.data)
+							this.setState({
+								
+								searchResult: _.filter(this.state.data,x=>
+									x.name.includes(text)
+								)
+							});
+							
+						}}
+						style={{marginHorizontal:50}}
+					/>
+
+<ScrollView contentContainerStyle={{maxHeight:300}} >
+
 					<FlatList
 					
-						data={this.state.data}
+						data={this.dataControl()}
 						keyExtractor={(item, index) => index.toString()}
 						renderItem={({ item, index }) => {
 							return (
@@ -56,12 +87,14 @@ this.setState({selectedItem:item})
 							);
 						}}
 					/>
+</ScrollView>
 					<Button raised onPress={() => this.deleteFullList()}>
 						Tümünü Sil
 					</Button>
 					<Button raised onPress={() => this.addNewItem()}>
 						Ekle
 					</Button>
+					
 				</View>
 			);
 		}
@@ -120,7 +153,17 @@ editItem(){
 
 
     }
+// 	more(){
 		
+// 		a=data.concat(this.state.moreData)
+// 		return(
+// 			<Button raised onPress={() => {
+// this.setState({data:a})
+// 			}}>
+// 						Daha Fazla kişi gör
+// 					</Button>
+// 		)
+// 	}	
 
 	deleteFullList() {
 		this.setState({ data: this.state.data.splice() });
