@@ -13,7 +13,7 @@ class FlatListWithJson extends Component {
 		isShowListVisible: false,
 		data: [],
 		modalVisible: false,
-		selectedItem: null
+		selectedItem: null,
 	};
 
 	componentDidMount(){
@@ -77,26 +77,47 @@ this.setState({selectedItem:item})
 		// a.push(newItem);
 		a = [ ...a, newItem ]; // 3 nokta , a nın hepsini al demek.a=[...a,newItem] da a nın hepsini al, sonuna da newItem ı ekle bu da a adında yeni bir dizi olsun demek.
 		this.setState({ data: a, modalVisible: true });
-    }
+	}
+editItem(){
+	let index=_.findIndex(this.state.data, this.state.selectedItem)
+	this.state.data.splice(index,1)
+
+		var newItem = {
+			phone: this.phone,
+			age: this.age,
+			name: this.name
+		};
+		let a = this.state.data;
+		a = [ ...a, newItem ];
+		this.setState({ data: a, modalVisible: true });
+}
     
 	deleteItem() {
-        console.log(this.state.selectedItem);
-        //burada selected itemın indexini bulıp datadan silceksin.
-    //    let index = this.state.data.indexOf(this.state.selectedItem);
-    //    this.state.data.slice(index, 1);
-    //    var data = [...this.state.data]
-    //    this.setState({ data:data });
+	let index=_.findIndex(this.state.data, this.state.selectedItem)
+	// let a=_.reject(data,this.state.selectedItem)
+	//   let a=this.state.data.splice(index,1)
+	//  this.setState({data:a})
+	// this.setState({data:this.state.data.splice(index,1)})
+	//  console.log(this.state.data)
+	// let b=_.filter(data,!this.state.selectedItem)
+	// this.setState({data:a})
+	newData= [];
+
+		for(i = 0;i<this.state.data.length;i++)
+		{
+			if(i !== index)
+			{
+			  newData.push(this.state.data[i])
+			}
+		}
+	this.setState({data:newData})
+
+	 console.log(newData)
+	
+		
+ 
    
 
-
-       
-
-
-		// this.setState({ selectedItem: this.state.data.slice() });
-	// 	let newData=data.map(selectedItem=>(
-	// 		!this.state.selectedItem? {...selectedItem, key: value}: selectedItem
-	//   ))
-	
 
     }
 		
@@ -142,6 +163,7 @@ console.log(this.state.selectedItem)
 
 	render() {
 		(this.phone = ''), (this.age = ''), (this.name = '');
+
 		return (
 			<ScrollView style={styles.container} horizontal={true} ref="myScroll" scrollEnabled={false}>
 				<View style={{ width: width }}>
@@ -185,33 +207,36 @@ console.log(this.state.selectedItem)
 				<View style={{ width: width }}>
                     {this.itemDetail()}
                     <Dialog visible={this.state.modalVisible} onDismiss={() => this.setState({ modalVisible: false })}>
+					<TextInput
+							placeholder="Telefon"
+							value={this.phone}
+							onChangeText={(text) => (this.phone = text)}
+						/>
 				<TextInput
-					placeholder="jfbkm"
-					value={this.phone}
-					onChangeText={(text) => (this.phone = text)}
-				/>
-				{/* <TextInput
-					placeholder={this.state.selectedItem.age}
+					placeholder="Yaş"
 					value={this.age}
 					onChangeText={(text) => (this.age = text)}
-				/>
+				/> 
 				<TextInput
-					placeholder={this.state.selectedItem.name}
+					placeholder="İsim"
 					value={this.name}
 					onChangeText={(text) => (this.name = text)}
-				/> */}
+				/> 
 				<Button
 					raised
-					onPress={() => {
+					onPress={() =>
+						 {
+						 console.log(this.state.data)
+						 this.editItem()
+
 						this.setState({
-							modalVisible: false,
-							data: this.state.data.splice(1, 1, {
-								phone: this.phone,
-								age: this.age,
-								name: this.name
-							})
-						});
-					}}
+							
+							modalVisible: false})
+							}
+						} 
+						
+				
+					
 				>
 					Düzenle
 				</Button>

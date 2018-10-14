@@ -21,7 +21,8 @@ data = [
 		firstName: 'Mehmet',
 		lastName: 'Açar',
 		phone: '05413568790'
-	}
+	},
+	
 ];
 const { width } = Dimensions.get('window');
 
@@ -48,7 +49,7 @@ class FlatListExmPage extends Component {
 							return (
 								<TouchableOpacity
 									onPress={() => {
-										let index= this.state.selectedItem.findIndex()
+										// let index= this.state.selectedItem.findIndex()
 
 										this.setState({ selectedItem: item,data:this.state.data.slice(index)}),
 									 	this.refs.myScroll.scrollTo({ x: width, y: 0, animated: true })
@@ -97,10 +98,15 @@ class FlatListExmPage extends Component {
 		this.setState({ data: a, modalVisible: true });
 	}
 	deleteItem() {
-		this.setState({ selectedItem: this.state.data.slice() });
-	// 	let newData=data.map(selectedItem=>(
-	// 		!this.state.selectedItem? {...selectedItem, key: value}: selectedItem
-	//   ))
+		// let index=data.indexOf({firstName:"Ayşe",lastName:"Kaya",phone:"05353934453"});
+		 let index=_.findIndex(data, this.state.selectedItem)
+		// let a=_.reject(data,this.state.selectedItem)
+		  let a=this.state.data.splice(index,1)
+		 this.setState({data:a})
+		// let b=_.filter(data,!this.state.selectedItem)
+		// this.setState({data:a})
+
+		
 	
 
 
@@ -168,7 +174,7 @@ class FlatListExmPage extends Component {
 					onPress={() => {
 						this.setState({
 							modalVisible: false,
-							data: this.state.data.splice(1, 1, {
+							data: this.state.data.splice(0, 1, {
 								firstName: this.firstName,
 								lastName: this.lastName,
 								phone: this.phone
