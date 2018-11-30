@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity, Dimensions, 
 import { Button, Dialog, TextInput, TouchableRipple } from 'react-native-paper';
 import { DummyData } from '../components/flatListExmPage/DummyData';
 import _ from 'lodash';
+import Page from '../components/common/Page';
 
 // *TODO :
 // Ekleye basınca 3 adet textinput çıkacak.Hepsi dolu ise diziye ekleyecek.Sonrada dizinin içindekine dokununca sil butonu çıkacak ve istenilen item silinebilecek.
@@ -21,8 +22,7 @@ data = [
 		firstName: 'Mehmet',
 		lastName: 'Açar',
 		phone: '05413568790'
-	},
-	
+	}
 ];
 const { width } = Dimensions.get('window');
 
@@ -34,15 +34,13 @@ class FlatListExmPage extends Component {
 		selectedItem: null
 	};
 
-
 	renderFlatList() {
-		console.log(this.state.selectedItem)
+		console.log(this.state.selectedItem);
 
 		if (this.state.isShowListVisible === true) {
 			return (
 				<View>
 					<FlatList
-					
 						data={this.state.data}
 						keyExtractor={(item, index) => index.toString()}
 						renderItem={({ item, index }) => {
@@ -51,8 +49,8 @@ class FlatListExmPage extends Component {
 									onPress={() => {
 										// let index= this.state.selectedItem.findIndex()
 
-										this.setState({ selectedItem: item,data:this.state.data.slice(index)}),
-									 	this.refs.myScroll.scrollTo({ x: width, y: 0, animated: true })
+										this.setState({ selectedItem: item, data: this.state.data.slice(index) }),
+											this.refs.myScroll.scrollTo({ x: width, y: 0, animated: true });
 										// if(!this.state.selectedItem){
 										// 	return (this.setState({ selectedItem: item }))
 
@@ -60,14 +58,11 @@ class FlatListExmPage extends Component {
 										// return (
 										// 	this.setState({ selectedItem: this.state.selectedItem }),
 										// 	this.refs.myScroll.scrollTo({ x: width, y: 0, animated: true })
-								
-										// )	
-										
+
+										// )
 									}}
 									key={index}
 								>
-					
-
 									<Text style={{ marginTop: 10 }}>{item.firstName}</Text>
 									<Text>{item.lastName}</Text>
 									<Text>{item.phone}</Text>
@@ -94,23 +89,17 @@ class FlatListExmPage extends Component {
 		};
 		let a = this.state.data;
 		// a.push(newItem);
-		a = [ ...a, newItem ]; // 3 nokta , a nın hepsini al demek.a=[...a,newItem] da a nın hepsini al, sonuna da newItem ı ekle bu da a adında yeni bir dizi olsun demek.
+		a = [...a, newItem]; // 3 nokta , a nın hepsini al demek.a=[...a,newItem] da a nın hepsini al, sonuna da newItem ı ekle bu da a adında yeni bir dizi olsun demek.
 		this.setState({ data: a, modalVisible: true });
 	}
 	deleteItem() {
 		// let index=data.indexOf({firstName:"Ayşe",lastName:"Kaya",phone:"05353934453"});
-		 let index=_.findIndex(data, this.state.selectedItem)
+		let index = _.findIndex(data, this.state.selectedItem);
 		// let a=_.reject(data,this.state.selectedItem)
-		  let a=this.state.data.splice(index,1)
-		 this.setState({data:a})
+		let a = this.state.data.splice(index, 1);
+		this.setState({ data: a });
 		// let b=_.filter(data,!this.state.selectedItem)
 		// this.setState({data:a})
-
-		
-	
-
-
-		
 	}
 	deleteFullList() {
 		this.setState({ data: this.state.data.splice() });
@@ -157,17 +146,17 @@ class FlatListExmPage extends Component {
 				<TextInput
 					placeholder={this.state.selectedItem.firstName}
 					value={this.firstName}
-					onChangeText={(text) => (this.firstName = text)}
+					onChangeText={text => (this.firstName = text)}
 				/>
 				<TextInput
 					placeholder={this.state.selectedItem.lastName}
 					value={this.lastName}
-					onChangeText={(text) => (this.lastName = text)}
+					onChangeText={text => (this.lastName = text)}
 				/>
 				<TextInput
 					placeholder={this.state.selectedItem.phone}
 					value={this.phone}
-					onChangeText={(text) => (this.phone = text)}
+					onChangeText={text => (this.phone = text)}
 				/>
 				<Button
 					raised
@@ -190,54 +179,59 @@ class FlatListExmPage extends Component {
 	render() {
 		(this.firstName = ''), (this.lastName = ''), (this.phone = '');
 		return (
-			<ScrollView style={styles.container} horizontal={true} ref="myScroll" scrollEnabled={false}>
-				<View style={{ width: width }}>
-					<Button
-						raised
-						onPress={() => {
-							this.setState({ isShowListVisible: !this.state.isShowListVisible });
-						}}
-					>
-						Listele
-					</Button>
-					{this.renderFlatList()}
-					<Dialog visible={this.state.modalVisible} onDismiss={() => this.setState({ modalVisible: false })}>
-						<TextInput
-							placeholder="İsim"
-							value={this.firstName}
-							onChangeText={(text) => (this.firstName = text)}
-						/>
-						<TextInput
-							placeholder="Soyisim"
-							value={this.lastName}
-							onChangeText={(text) => (this.lastName = text)}
-						/>
-						<TextInput placeholder="No" value={this.phone} onChangeText={(text) => (this.phone = text)} />
+			<Page>
+				<ScrollView style={styles.container} horizontal={true} ref="myScroll" scrollEnabled={false}>
+					<View style={{ width: width }}>
 						<Button
 							raised
 							onPress={() => {
-								console.log(this.firstName, this.lastName, this.phone);
-								if (!this.firstName || !this.lastName || !this.phone) {
-									// return (
-									// 	<Text style={{ color: 'pink', fontSize: 20 }}>
-									// 		Lütfen tüm alanları doldurunuz
-									// 	</Text>
-									// );
-									Alert.alert(null, 'Lütfen tüm alanları doldurunuz!', [ { text: 'Tamam' } ]);
-									return;
-								}
-								this.addNewItem(), this.setState({ modalVisible: false });
+								this.setState({ isShowListVisible: !this.state.isShowListVisible });
 							}}
 						>
-							Yeni Üye Ekle
+							Listele
 						</Button>
-					</Dialog>
-				</View>
-				<View style={{ width: width }}>
-					{this.itemDetail()}
-					{this.editItem()}
-				</View>
-			</ScrollView>
+						{this.renderFlatList()}
+						<Dialog
+							visible={this.state.modalVisible}
+							onDismiss={() => this.setState({ modalVisible: false })}
+						>
+							<TextInput
+								placeholder="İsim"
+								value={this.firstName}
+								onChangeText={text => (this.firstName = text)}
+							/>
+							<TextInput
+								placeholder="Soyisim"
+								value={this.lastName}
+								onChangeText={text => (this.lastName = text)}
+							/>
+							<TextInput placeholder="No" value={this.phone} onChangeText={text => (this.phone = text)} />
+							<Button
+								raised
+								onPress={() => {
+									console.log(this.firstName, this.lastName, this.phone);
+									if (!this.firstName || !this.lastName || !this.phone) {
+										// return (
+										// 	<Text style={{ color: 'pink', fontSize: 20 }}>
+										// 		Lütfen tüm alanları doldurunuz
+										// 	</Text>
+										// );
+										Alert.alert(null, 'Lütfen tüm alanları doldurunuz!', [{ text: 'Tamam' }]);
+										return;
+									}
+									this.addNewItem(), this.setState({ modalVisible: false });
+								}}
+							>
+								Yeni Üye Ekle
+							</Button>
+						</Dialog>
+					</View>
+					<View style={{ width: width }}>
+						{this.itemDetail()}
+						{this.editItem()}
+					</View>
+				</ScrollView>
+			</Page>
 		);
 	}
 }
