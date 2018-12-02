@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { widthPercentageToDP } from '../../helpers';
-
-class Outline extends Component {
+import { widthPercentageToDP, heightPercentageToDP } from '../../helpers';
+class HomeButton extends Component {
 	render() {
+		const { buttonContainerStyle,text,onClick } = this.props;
 		return (
-			<TouchableOpacity onPress={() => {}} style={styles.container}>
-				<Text style={styles.text}>Dummy Flatlist</Text>
+			<TouchableOpacity onPress={onClick} style={[ styles.container,buttonContainerStyle ]}
+			
+			>
+				<Text style={styles.text}>{text}</Text>
 			</TouchableOpacity>
 		);
 	}
 }
-export default Outline;
+export default HomeButton;
 
 const styles = StyleSheet.create({
 	container: {
 		padding: widthPercentageToDP('5'),
 		backgroundColor: 'black',
-		width: widthPercentageToDP('40')
+		width: widthPercentageToDP('40'),
+		height:heightPercentageToDP("7")
 	},
 	text: {
-		color: 'white'
+		color: 'white',
+		textAlign:"center"
 	}
 });

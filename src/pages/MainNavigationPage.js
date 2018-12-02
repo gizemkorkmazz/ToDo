@@ -3,6 +3,8 @@ import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import { FlatListExmPage } from './FlatListExmPage';
 import { FlatListWithJson } from './FlatListWithJson';
 import HomePage from './HomePage';
+import CameraPage from './CameraPage';
+import QrCodePage from './QrCodePage';
 const Roots = createDrawerNavigator(
 	{
 		home: {
@@ -21,6 +23,18 @@ const Roots = createDrawerNavigator(
 			screen: FlatListWithJson,
 			navigationOptions: {
 				drawerLabel: 'Json Flatlist '
+			}
+		},
+		camera: {
+			screen: CameraPage,
+			navigationOptions: {
+				drawerLabel: 'Kamera '
+			}
+		},
+		qrCode: {
+			screen: QrCodePage,
+			navigationOptions: {
+				drawerLabel: 'Karekod '
 			}
 		}
 	},
